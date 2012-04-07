@@ -3,6 +3,9 @@ package net.minecraft.src;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import de.doridian.yiffcraft.overrides.YCEntityClientPlayerMP;
+import de.doridian.yiffcraft.overrides.YCRenderPlayer;
 import org.lwjgl.opengl.GL11;
 //Spout Start
 import org.lwjgl.opengl.GL13;
@@ -81,6 +84,7 @@ public class RenderManager {
 		//Spout Start
 		this.entityRenderMap.put(EntityText.class, new RenderText());
 		this.entityRenderMap.put(EntityTexture.class, new RenderTexture());
+		/*@DORI*/ this.entityRenderMap.put(YCEntityClientPlayerMP.class, new YCRenderPlayer());
 		//Spout End
 		Iterator var1 = this.entityRenderMap.values().iterator();
 

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import de.doridian.yiffcraft.ClientCommands;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -45,6 +47,10 @@ public class Packet250CustomPayload extends Packet {
 		if (this.length > 0 && this.length < 32767) {
 			this.data = new byte[this.length];
 			par1DataInputStream.readFully(this.data);
+		}
+
+		if(this.channel.equalsIgnoreCase("yiffcraft")) {
+			ClientCommands.incoming(this.data);
 		}
 	}
 

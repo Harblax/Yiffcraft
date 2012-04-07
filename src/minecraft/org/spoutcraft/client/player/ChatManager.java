@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.doridian.yiffcraft.Chat;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -330,6 +331,7 @@ public class ChatManager implements org.spoutcraft.spoutcraftapi.player.ChatMana
 	}
 
 	public boolean handleCommand(String command) {
+		/*@DORI*/ if(!Chat.outgoing(command)) return true;
 		try {
 			 if (command.equals("/?") || command.startsWith("/client help")) {
 				SpoutClient.getHandle().ingameGUI.addChatMessage(ChatColor.YELLOW.toString() + "Spoutcraft Client Debug Commands:");

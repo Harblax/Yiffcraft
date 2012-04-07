@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import de.doridian.yiffcraft.Yiffcraft;
 import net.minecraft.src.Entity;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.Packet;
@@ -51,7 +53,7 @@ public class Packet18Animation extends Packet {
 			SpoutClient.getInstance().setSpoutVersion(1);
 			((NetClientHandler) par1NetHandler).addToSendQueue(this);
 			SpoutClient.getInstance().getPacketManager().sendSpoutPacket(new PacketRenderDistance((byte)Minecraft.theMinecraft.gameSettings.renderDistance));
-			SpoutClient.getInstance().getPacketManager().sendSpoutPacket(new PacketFullVersion(Long.toString(SpoutClient.getClientVersion())));
+			/*@DORI*/ SpoutClient.getInstance().getPacketManager().sendSpoutPacket(new PacketFullVersion(Yiffcraft.YCFULLVERSION));
 			List<Addon> addons = new ArrayList<Addon>(Arrays.asList(SpoutClient.getInstance().getAddonManager().getAddons()));
 			for (Iterator<Addon> i = addons.iterator(); i.hasNext(); ) {
 				Addon a = i.next();

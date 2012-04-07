@@ -51,6 +51,7 @@ public class Tessellator {
   private ShortBuffer shadersShortBuffer;
   private short[] shadersData;
 	//Spout End
+	/*@DORI*/ public int opaqueAlpha = 255;
 
 
 	private Tessellator(int par1) {
@@ -235,7 +236,7 @@ public class Tessellator {
 	}
 
 	public void setColorOpaque(int par1, int par2, int par3) {
-		this.setColorRGBA(par1, par2, par3, 255);
+		/*@DORI*/ this.setColorRGBA(par1, par2, par3, opaqueAlpha);
 	}
 
 	public void setColorRGBA(int par1, int par2, int par3, int par4) {

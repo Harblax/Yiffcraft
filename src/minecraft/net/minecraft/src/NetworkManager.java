@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 //Spout start
+import de.doridian.yiffcraft.Yiffcraft;
 import org.spoutcraft.client.chunkcache.ChunkCache;
 //Spout end
 
@@ -210,6 +211,7 @@ public class NetworkManager {
 		while (!this.readPackets.isEmpty() && var1-- >= 0) {
 			Packet var2 = (Packet)this.readPackets.remove(0);
 			ChunkCache.totalPacketDown.addAndGet(var2.getPacketSize()); // Spout
+			/*@DORI*/ Yiffcraft.lastPacket = System.currentTimeMillis();
 			var2.processPacket(this.netHandler);
 		}
 

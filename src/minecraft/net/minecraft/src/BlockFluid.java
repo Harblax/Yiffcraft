@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import java.util.Random;
 //Spout start
+import de.doridian.yiffcraft.Yiffcraft;
 import org.spoutcraft.client.config.ConfigReader;
 
 import com.pclewis.mcpatcher.mod.Colorizer;
@@ -97,6 +98,7 @@ public abstract class BlockFluid extends Block {
 	}
 
 	public boolean canCollideCheck(int par1, boolean par2) {
+		/*@DORI*/ if(Yiffcraft.enableWaterwalk) return true;
 		return par2 && par1 == 0;
 	}
 
@@ -111,6 +113,7 @@ public abstract class BlockFluid extends Block {
 	}
 
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
+		/*@DORI*/ if(Yiffcraft.enableWaterwalk) return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
 		return null;
 	}
 
@@ -240,7 +243,7 @@ public abstract class BlockFluid extends Block {
 	}
 
 	public int getRenderBlockPass() {
-		return this.blockMaterial == Material.water?1:0;
+		/*@DORI*/ return this.blockMaterial == Material.water ? 1 : super.getRenderBlockPass();
 	}
 
 	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {

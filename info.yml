@@ -1,0 +1,3 @@
+minecraft: "1.2.5"
+libraries: {jmdns: "3.4.1", commons-io: "2.1", commons-lang3: "3.1", guava: "11.0.2", joda-time: "2.1", slick: "0.3", snakeyaml: "1.10", trove4j: "3.0.2", dnsjava: "2.1.3"}
+builds: {scapi: 350, worldedit: 447}

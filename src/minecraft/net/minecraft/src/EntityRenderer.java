@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Random;
+
+import de.doridian.yiffcraft.Renderer;
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.input.Keyboard;
@@ -37,7 +39,7 @@ public class EntityRenderer {
 	private MouseFilter mouseFilterDummy2 = new MouseFilter();
 	private MouseFilter mouseFilterDummy3 = new MouseFilter();
 	private MouseFilter mouseFilterDummy4 = new MouseFilter();
-	private float thirdPersonDistance = 4.0F;
+	public float thirdPersonDistance = 4.0F; /*@DORI*/ /* private -> public */
 	private float thirdPersonDistanceTemp = 4.0F;
 	private float debugCamYaw = 0.0F;
 	private float prevDebugCamYaw = 0.0F;
@@ -50,7 +52,7 @@ public class EntityRenderer {
 	private float smoothCamPartialTicks;
 	private float debugCamFOV = 0.0F;
 	private float prevDebugCamFOV = 0.0F;
-	private float camRoll = 0.0F;
+	public float camRoll = 0.0F; /*@DORI*/ /* private -> public */
 	private float prevCamRoll = 0.0F;
 	public int lightmapTexture;
 	private int[] lightmapColors;
@@ -966,6 +968,8 @@ public class EntityRenderer {
 			if (this.pointedEntity != null) {
 				;
 			}
+
+			/*@DORI*/ Renderer.renderEffects(par1);
 
 			if (this.mc.gameSettings.shouldRenderClouds()) {
 				Profiler.endStartSection("clouds");

@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.io.PrintStream;
 import java.util.List;
+
+import de.doridian.yiffcraft.Yiffcraft;
 import net.minecraft.client.Minecraft;
 
 public class GuiConnecting extends GuiScreen
@@ -135,6 +137,7 @@ public class GuiConnecting extends GuiScreen
 		cancelled = false;
 		System.out.println((new StringBuilder()).append("Connecting to ").append(par2Str).append(", ").append(par3).toString());
 		par1Minecraft.changeWorld1(null);
+		/*@DORI*/ Yiffcraft.connectingTo(par2Str, par3);
 		(new ThreadConnectToServer(this, par1Minecraft, par2Str, par3)).start();
 	}
 

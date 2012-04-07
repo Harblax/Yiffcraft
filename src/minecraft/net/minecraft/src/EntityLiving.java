@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 //Spout Start
+import de.doridian.yiffcraft.Speedhack;
+import de.doridian.yiffcraft.Yiffcraft;
 import org.spoutcraft.client.SpoutClient;
 import org.spoutcraft.client.config.ConfigReader;
 import org.spoutcraft.client.entity.CraftLivingEntity;
@@ -344,11 +346,11 @@ public abstract class EntityLiving extends Entity {
 
 		if (this.entityLivingToAttack != null) {
 			if (!this.entityLivingToAttack.isEntityAlive()) {
-				this.setRevengeTarget((EntityLiving)null);
+				this.setRevengeTarget((EntityLiving) null);
 			} else if (this.revengeTimer > 0) {
 				--this.revengeTimer;
 			} else {
-				this.setRevengeTarget((EntityLiving)null);
+				this.setRevengeTarget((EntityLiving) null);
 			}
 		}
 
@@ -599,7 +601,7 @@ public abstract class EntityLiving extends Entity {
 				Entity var4 = par1DamageSource.getEntity();
 				if (var4 != null) {
 					if (var4 instanceof EntityLiving) {
-						this.setRevengeTarget((EntityLiving)var4);
+						this.setRevengeTarget((EntityLiving) var4);
 					}
 
 					if (var4 instanceof EntityPlayer) {
@@ -745,7 +747,7 @@ public abstract class EntityLiving extends Entity {
 				if (this.recentlyHit > 0) {
 					int var4 = this.rand.nextInt(200) - var3;
 					if (var4 < 5) {
-						this.dropRareDrop(var4 <= 0?1:0);
+						this.dropRareDrop(var4 <= 0 ? 1 : 0);
 					}
 				}
 			}
@@ -1069,28 +1071,49 @@ public abstract class EntityLiving extends Entity {
 		}
 
 		Profiler.endSection();
-		boolean var14 = this.isInWater();
-		boolean var2 = this.handleLavaMovement();
-		if (this.isJumping) {
-			if (var14) {
-				this.motionY += 0.03999999910593033D * getData().getJumpingMod(); //FIXME does this need to be * getData().getJumpingMod();
-			} else if (var2) {
-				this.motionY += 0.03999999910593033D * getData().getJumpingMod();
-			} else if (this.onGround && this.jumpTicks == 0) {
-				this.jump();
-				this.jumpTicks = 10;
-			}
-		} else {
-			this.jumpTicks = 0;
-		}
 
 		this.moveStrafing *= 0.98F;
 		this.moveForward *= 0.98F;
 		this.randomYawVelocity *= 0.9F;
-		float var15 = this.landMovementFactor;
-		this.landMovementFactor *= this.getSpeedModifier();
-		this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
-		this.landMovementFactor = var15;
+
+		/*@DORI*/
+		if(Yiffcraft.enableFly && this == Yiffcraft.minecraft.thePlayer)
+		{
+			if(isJumping)
+				motionY = 0.2;
+			else if(isSneaking())
+				motionY = -0.2;
+			else
+				motionY = 0;
+
+			if(Yiffcraft.flymodeSpecial) {
+				moveFlyingWithPitch(moveStrafing, moveForward, 1F);
+				moveEntity(motionX * Speedhack.getSpeedMultiplier(), motionY * Speedhack.getSpeedMultiplier(), motionZ * Speedhack.getSpeedMultiplier());
+			} else {
+				motionY *= Speedhack.getSpeedMultiplier();
+				moveEntityWithHeading(moveStrafing, moveForward);
+			}
+		} else {
+			/*@DORI*/
+			boolean var14 = this.isInWater();
+			boolean var2 = this.handleLavaMovement();
+			if (this.isJumping) {
+				if (var14) {
+					this.motionY += 0.03999999910593033D * getData().getJumpingMod(); //FIXME does this need to be * getData().getJumpingMod();
+				} else if (var2) {
+					this.motionY += 0.03999999910593033D * getData().getJumpingMod();
+				} else if (this.onGround && this.jumpTicks == 0) {
+					this.jump();
+					this.jumpTicks = 10;
+				}
+			} else {
+				this.jumpTicks = 0;
+			}
+			float var15 = this.landMovementFactor;
+			this.landMovementFactor *= this.getSpeedModifier();
+			this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
+			this.landMovementFactor = var15;
+		}
 		Profiler.startSection("push");
 		List var4 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 		if (var4 != null && var4.size() > 0) {
@@ -1104,6 +1127,39 @@ public abstract class EntityLiving extends Entity {
 
 		Profiler.endSection();
 	}
+
+	/*@DORI*/
+	public void moveFlyingWithPitch(float f, float f1, float f2) {
+		float f3 = MathHelper.sqrt_float(f * f + f1 * f1);
+		if(f3 < 0.01F)
+		{
+			motionX = 0;
+			motionZ = 0;
+			return;
+		}
+		if(f3 < 1.0F)
+		{
+			f3 = 1.0F;
+		}
+		f3 = f2 / f3;
+		f *= f3;
+		f1 *= f3;
+
+		float f4 = MathHelper.sin((rotationYaw * 3.141593F) / 180F);
+		float f5 = MathHelper.cos((rotationYaw * 3.141593F) / 180F);
+
+		float f6 = MathHelper.sin((rotationPitch * 3.141593F) / 180F);
+		float f7 = MathHelper.cos((rotationPitch * 3.141593F) / 180F);
+
+		float fmul = 0;
+		if(f1 > 0) fmul = -1;
+		else if(f1 < 0) fmul = 1;
+
+		motionX = (f * f5 - f1 * f4 * f7) * 0.2;
+		motionY += fmul * f6 * 0.2;
+		motionZ = (f1 * f5 * f7 + f * f4) * 0.2;
+	}
+	/*@DORI*/
 
 	protected boolean isAIEnabled() {
 		return false;

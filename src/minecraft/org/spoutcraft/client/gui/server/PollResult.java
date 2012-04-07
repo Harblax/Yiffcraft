@@ -29,11 +29,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
+import de.doridian.yiffcraft.SSLConnector;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import org.spoutcraft.client.SpoutClient;
 import org.spoutcraft.client.io.MirrorUtils;
 import org.spoutcraft.client.util.NetworkUtils;
+
+import javax.net.ssl.SSLSocket;
 
 public class PollResult {
 	protected int ping;
@@ -177,10 +180,27 @@ public class PollResult {
 			DataInputStream input = null;
 			DataOutputStream output = null;
 			try {
+				/*@DORI*/
+				while(SSLConnector.allTrustingSocketFactory == null) {
+					Thread.sleep(100);
+				}
+				/*@DORI*/
 				long start = System.currentTimeMillis();
-				sock = new Socket();
+				/*@DORI*/
+				String connip = ip;
+				int connport = port;
+				if(connip.charAt(0) == '+') {
+					SSLSocket tmp = (SSLSocket)SSLConnector.allTrustingSocketFactory.createSocket();
+					tmp.setUseClientMode(false);
+					sock = tmp;
+					connip = connip.substring(1);
+					if(connport == 25565) connport = 25566;
+				} else {
+					sock = new Socket();
+				}
+				/*@DORI*/
 				sock.setSoTimeout(10000);
-				InetSocketAddress address = NetworkUtils.resolve(ip, port);
+				/*@DORI*/ InetSocketAddress address = NetworkUtils.resolve(connip, connport);
 				if (address.isUnresolved()) {
 					ping = PING_UNKNOWN;
 					return;

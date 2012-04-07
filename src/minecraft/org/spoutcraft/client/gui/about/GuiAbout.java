@@ -19,6 +19,7 @@ package org.spoutcraft.client.gui.about;
 import java.awt.Desktop;
 import java.net.URL;
 
+import de.doridian.yiffcraft.Yiffcraft;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
@@ -92,7 +93,7 @@ public class GuiAbout extends GuiScreen {
 		} else if (this.isInBoundingRect((this.width - 140), this.height - 45, 32, 128, mouseX, mouseY)) {
 			browseUrl = "http://spout.in/spoutcraft";
 		} else if (this.isInBoundingRect(this.width / 2 + 30, getScaledHeight(sourceY), 10, sourceWidth, mouseX, mouseY)) {
-			browseUrl = "https://github.com/SpoutDev";
+			browseUrl = "https://github.com/Doridian/Yiffcraft";
 		}
 		if (browseUrl != null) {
 			try {
@@ -234,6 +235,7 @@ public class GuiAbout extends GuiScreen {
 		top = 130;
 
 		drawScaledString("Team", this.width / 2 + 30, top, 0xffffff); top += 10;
+		/*@DORI*/ drawScaledString(Yiffcraft.rainbowizeText("Doridian - YC Lead", 0), this.width / 2 + 30, top, 0x808080); top += 10;
 		drawScaledString("Afforess - Lead Developer", this.width / 2 + 30, top, 0x808080); top += 10;
 		drawScaledString("Wulfspider - Co-Lead & Support", this.width / 2 + 30, top, 0x808080); top += 10;
 		drawScaledString("alta189 - Co-Lead & Developer", this.width / 2 + 30, top, 0x808080); top += 10;
@@ -249,19 +251,19 @@ public class GuiAbout extends GuiScreen {
 		top += 20;
 
 		drawScaledString("Contact", this.width / 2 + 30, top, 0xffffff); top += 10;
-		drawScaledString("Email: dev@spout.org", this.width / 2 + 30, top, 0x808080); top += 10;
-		drawScaledString("Website: spout.org", this.width / 2 + 30, top, 0x808080); top += 10;
-		drawScaledString("#spout on irc.esper.net", this.width / 2 + 30, top, 0x808080); top += 10;
+		/*@DORI*/ drawScaledString("Email: mriq91@gmail.com", this.width / 2 + 30, top, 0x808080); top += 10;
+		/*@DORI*/ drawScaledString("Website: yiffcraft.net", this.width / 2 + 30, top, 0x808080); top += 10;
+		/*@DORI*/ drawScaledString("#minecraft on irc.doridian.de", this.width / 2 + 30, top, 0x808080); top += 10;
 
 		top += 20;
 
 		drawScaledString("Note", this.width / 2 + 30, top, 0xffffff); top += 10;
-		drawScaledString("Spoutcraft, Spout, and related", this.width / 2 + 30, top, 0x808080); top += 10;
+		/*@DORI*/ drawScaledString("Yiffcraft, SC, Spout, and related", this.width / 2 + 30, top, 0x808080); top += 10;
 		drawScaledString("projects are open source. You", this.width / 2 + 30, top, 0x808080); top += 10;
 		drawScaledString("can browse the source code at", this.width / 2 + 30, top, 0x808080);  top += 10;
 		sourceY = top;
-		sourceWidth = this.fontRenderer.getStringWidth("https://github.com/SpoutDev");
-		drawScaledString("https://github.com/SpoutDev", this.width / 2 + 30, sourceY, hoveringLink ? 0x65A5D1 : 0x176093); top += 10;
+		/*@DORI*/ sourceWidth = this.fontRenderer.getStringWidth("https://github.com/Doridian/Yiffcraft");
+		/*@DORI*/ drawScaledString("https://github.com/Doridian/Yiffcraft", this.width / 2 + 30, sourceY, hoveringLink ? 0x65A5D1 : 0x176093); top += 10;
 
 		top += 20;
 

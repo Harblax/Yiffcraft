@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import de.doridian.yiffcraft.Yiffcraft;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 //Spout Start
@@ -452,6 +453,7 @@ public class ItemRenderer {
 	}
 
 	public void renderOverlays(float par1) {
+		/*@DORI*/ if(Yiffcraft.enableOutOfBody) return;
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		int var2;
 		if (this.mc.thePlayer.isBurning()) {

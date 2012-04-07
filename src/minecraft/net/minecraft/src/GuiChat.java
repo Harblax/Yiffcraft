@@ -4,6 +4,8 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 
+import de.doridian.yiffcraft.Yiffcraft;
+import de.doridian.yiffcraft.overrides.YCGuiChat;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -45,6 +47,12 @@ public class GuiChat extends GuiScreen
 	public void initGui()
 	{
 		Keyboard.enableRepeatEvents(true);
+
+		/*@DORI*/
+		if(!(Yiffcraft.minecraft.currentScreen instanceof YCGuiChat)) {
+			Yiffcraft.minecraft.displayGuiScreen(new YCGuiChat());
+		}
+		/*@DORI*/
 	}
 
 	/**

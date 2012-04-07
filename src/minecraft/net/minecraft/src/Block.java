@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import de.doridian.yiffcraft.Yiffcraft;
 import gnu.trove.map.hash.TIntFloatHashMap;
 
 import java.util.ArrayList;
@@ -307,6 +308,7 @@ public class Block {
 	}
 
 	public int getMixedBrightnessForBlock(IBlockAccess par1IBlockAccess, int x, int y, int z) {
+		/*@DORI*/ if(Yiffcraft.enableFullbright) return 1000;
 		// Spout start
 		int light = lightValue[this.blockID];
 		if (customIds != null) {
@@ -566,7 +568,7 @@ public class Block {
 	public void onBlockDestroyedByExplosion(World par1World, int par2, int par3, int par4) {}
 
 	public int getRenderBlockPass() {
-		return 0;
+		/*@DORI*/ return (Yiffcraft.enableWallhack && !Yiffcraft.valuableBlocks[this.blockID]) ? 1 : 0;
 	}
 
 	public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5) {

@@ -19,6 +19,11 @@ import java.util.Map;
 import java.util.Random;
 
 // Spout start
+import de.doridian.yiffcraft.Chat;
+import de.doridian.yiffcraft.SSLConnector;
+import de.doridian.yiffcraft.Yiffcraft;
+import de.doridian.yiffcraft.gui.ingame.Radar;
+import de.doridian.yiffcraft.overrides.YCPlayerControllerMP;
 import net.minecraft.client.Minecraft;
 
 import org.spoutcraft.client.SpoutClient;
@@ -29,6 +34,8 @@ import org.spoutcraft.client.util.NetworkUtils;
 
 import net.minecraft.client.Minecraft;
 import org.spoutcraft.spoutcraftapi.entity.LivingEntity;
+
+import javax.net.ssl.SSLSocket;
 
 public class NetClientHandler extends NetHandler {
 	private boolean disconnected = false;
@@ -51,13 +58,34 @@ public class NetClientHandler extends NetHandler {
 	
 	public NetClientHandler(Minecraft par1Minecraft, String par2Str, int par3) throws UnknownHostException, IOException {
 		this.mc = par1Minecraft;
-		
+
+		/*@DORI*/
+		String ip = par2Str;
+		int port = par3;
+		boolean ssl = false;
+		if(ip.charAt(0) == '+') {
+			ip = ip.substring(1);
+			if(port == 25565) {
+				port = 25566;
+			}
+			ssl = true;
+		}
+
 		// Spout start
-		InetSocketAddress address = NetworkUtils.resolve(par2Str, par3);
+		InetSocketAddress address = NetworkUtils.resolve(ip, port);
 		if (address.isUnresolved()) {
 			throw new UnknownHostException(address.getHostName());
 		}
-		this.netManager = new NetworkManager(new Socket(address.getAddress(), address.getPort()), "Client", this);
+		Socket socket;
+		if(ssl) {
+			SSLSocket tmp = (SSLSocket) SSLConnector.allTrustingSocketFactory.createSocket(address.getAddress(), address.getPort());
+			tmp.setUseClientMode(false);
+			socket = tmp;
+		} else {
+			socket = new Socket(address.getAddress(), address.getPort());
+		}
+		this.netManager = new NetworkManager(socket, "Client", this);
+		/*@DORI*/
 		
 		org.spoutcraft.client.gui.error.GuiConnectionLost.lastServerIp = par2Str;
 		org.spoutcraft.client.gui.error.GuiConnectionLost.lastServerPort = par3;
@@ -82,7 +110,7 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleLogin(Packet1Login par1Packet1Login) {
-		this.mc.playerController = new PlayerControllerMP(this.mc, this);
+		/*@DORI*/ this.mc.playerController = new YCPlayerControllerMP(this.mc, this);
 		this.mc.statFileWriter.readStat(StatList.joinMultiplayerStat, 1);
 		this.worldClient = new WorldClient(this, new WorldSettings(0L, par1Packet1Login.serverMode, false, false, par1Packet1Login.terrainType), par1Packet1Login.field_48170_e, par1Packet1Login.difficultySetting);
 		this.worldClient.isRemote = true;
@@ -261,6 +289,7 @@ public class NetClientHandler extends NetHandler {
 			((LivingEntity)SpoutClient.getInstance().getEntityFromId(var10.entityId).spoutEntity).setTitle(var10.worldObj.customTitles.get(var10.entityId));
 		}
 		//Spout end
+		/*@DORI*/ Radar.addPlayer(this, par1Packet20NamedEntitySpawn.entityId, var10, par1Packet20NamedEntitySpawn);
 	}
 
 	public void handleEntityTeleport(Packet34EntityTeleport par1Packet34EntityTeleport) {
@@ -275,6 +304,7 @@ public class NetClientHandler extends NetHandler {
 			float var9 = (float)(par1Packet34EntityTeleport.yaw * 360) / 256.0F;
 			float var10 = (float)(par1Packet34EntityTeleport.pitch * 360) / 256.0F;
 			var2.setPositionAndRotation2(var3, var5, var7, var9, var10, 3);
+			/*@DORI*/ Radar.updatePosition(this, par1Packet34EntityTeleport.entityId, var2);
 		}
 	}
 
@@ -290,6 +320,7 @@ public class NetClientHandler extends NetHandler {
 			float var9 = par1Packet30Entity.rotating?(float)(par1Packet30Entity.yaw * 360) / 256.0F:var2.rotationYaw;
 			float var10 = par1Packet30Entity.rotating?(float)(par1Packet30Entity.pitch * 360) / 256.0F:var2.rotationPitch;
 			var2.setPositionAndRotation2(var3, var5, var7, var9, var10, 3);
+			/*@DORI*/ Radar.updatePosition(this, par1Packet30Entity.entityId, var2);
 		}
 	}
 
@@ -303,6 +334,7 @@ public class NetClientHandler extends NetHandler {
 
 	public void handleDestroyEntity(Packet29DestroyEntity par1Packet29DestroyEntity) {
 		this.worldClient.removeEntityFromWorld(par1Packet29DestroyEntity.entityId);
+		/*@DORI*/ Radar.removePlayer(this, par1Packet29DestroyEntity.entityId);
 	}
 
 	public void handleFlying(Packet10Flying par1Packet10Flying) {
@@ -485,7 +517,11 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleChat(Packet3Chat par1Packet3Chat) {
-		this.mc.ingameGUI.addChatMessage(par1Packet3Chat.message);
+		/*@DORI*/
+		String msg = Chat.incoming(par1Packet3Chat.message, this);
+		if(msg == null || msg.length() < 1) return;
+		this.mc.ingameGUI.addChatMessage(msg);
+		/*@DORI*/
 	}
 
 	public void handleAnimation(Packet18Animation par1Packet18Animation) {
@@ -861,6 +897,7 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleKeepAlive(Packet0KeepAlive par1Packet0KeepAlive) {
+		/*@DORI*/ Yiffcraft.lastPingPacket = System.currentTimeMillis();
 		this.addToSendQueue(new Packet0KeepAlive(par1Packet0KeepAlive.randomId));
 	}
 
